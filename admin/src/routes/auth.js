@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react'
 import { Route, NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
 import SignInForm from '../components/auth/sign-in'
 import SignUpForm from '../components/auth/sign-up'
+import { signIn, signUp } from '../ducks/auth'
 
 class AuthRoute extends Component {
   render() {
@@ -37,9 +39,11 @@ class AuthRoute extends Component {
 
   signUpForm = () => <SignUpForm onSubmit={this.handleSignUp} />
 
-  handleSignIn = ({ email, password }) => console.log('---', email, password)
-  handleSignUp = ({ email, password }) =>
-    console.log('sign-up', email, password)
+  handleSignIn = ({ email, password }) => this.props.signIn(email, password)
+  handleSignUp = ({ email, password }) => this.props.signUp(email, password)
 }
 
-export default AuthRoute
+export default connect(
+  null,
+  { signIn, signUp }
+)(AuthRoute)
