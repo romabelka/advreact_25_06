@@ -1,9 +1,13 @@
 import { createStore, applyMiddleware } from 'redux'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import thunk from 'redux-thunk'
-import logger from 'redux-logger'
+import { createLogger } from 'redux-logger'
 import reducer from './reducer'
 import history from '../history'
+
+const logger = createLogger({
+  collapsed: true
+})
 
 const enhancer = applyMiddleware(thunk, routerMiddleware(history), logger)
 
