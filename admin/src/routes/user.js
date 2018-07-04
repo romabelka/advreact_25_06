@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Route, NavLink } from 'react-router-dom'
-import NewUserForm from '../components/user/new-user'
+import { connect } from 'react-redux'
+import NewUserForm from '../components/user/create-user'
+import { createUser } from '../ducks/user'
 
 class UserRoute extends Component {
   render() {
@@ -11,12 +13,19 @@ class UserRoute extends Component {
           Create a new user
         </NavLink>
 
-        <Route path="/user/new-user" render={this.newUserForm} />
+        <Route path="/user/new-user" render={this.newUserForm} onSubmit />
       </div>
     )
   }
 
-  newUserForm = () => <NewUserForm />
+  newUserForm = () => <NewUserForm onSubmit={this.handleSubmit} />
+
+  handleSubmit = ({ firstName, lastName, email }) => {
+    this.props.createUser(firstName, lastName, email)
+  }
 }
 
-export default UserRoute
+export default connect(
+  null,
+  { createUser }
+)(UserRoute)
