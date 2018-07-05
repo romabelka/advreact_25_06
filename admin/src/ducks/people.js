@@ -79,18 +79,3 @@ export function* addPersonSaga(action) {
 export function* saga() {
   yield takeEvery(ADD_PERSON, addPersonSaga)
 }
-
-/*
-export function addPerson(person) {
-  return (dispatch) => {
-    dispatch({
-      type: ADD_PERSON,
-      payload: {
-        person: { id: Date.now(), ...person }
-      }
-    })
-
-    dispatch(reset('person'))
-  }
-}
-*/
