@@ -13,10 +13,8 @@ class AdminRoute extends Component {
     )
   }
 
-  handleAddUser = ({ firstName, lastName, email }, dispatch, decor) => {
+  handleAddUser = ({ firstName, lastName, email }) =>
     this.props.addUser(firstName, lastName, email)
-    decor.reset()
-  }
 }
 
 export default connect(
