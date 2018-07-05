@@ -1,5 +1,6 @@
 import { appName } from '../config'
 import { Record } from 'immutable'
+import { reset } from 'redux-form'
 import firebase from 'firebase/app'
 
 /**
@@ -43,6 +44,7 @@ export function addUser(firstName, lastName, email) {
       type: ADD_USER_SUCCESS,
       payload: { newUser: { firstName, lastName, email } }
     })
+    dispatch(reset('user'))
   }
 }
 
