@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import App from './App'
 import history from './history'
 import store from './redux'
+import './mocks'
 
 ReactDOM.render(
   <Provider store={store}>
