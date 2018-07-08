@@ -8,7 +8,10 @@ class EventsList extends Component {
   }
 
   render() {
-    return <Fragment>hey)</Fragment>
+    console.log(this.props.events)
+    const { events, fetching } = this.props
+    console.log()
+    return <div>{fetching ? <div>(</div> : <div>))</div>}</div>
   }
 }
 
