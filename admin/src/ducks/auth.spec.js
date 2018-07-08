@@ -58,7 +58,7 @@ describe('Auth duck sign up saga', () => {
       payload: credentials
     }
 
-    const saga = signUpSaga(action)
+    const saga = signInSaga(action)
 
     expect(saga.next().value).toEqual(
       apply(auth, auth.signInWithEmailAndPassword, [
