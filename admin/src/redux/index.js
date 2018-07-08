@@ -1,12 +1,15 @@
 import { createStore, applyMiddleware } from 'redux'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
-import logger from 'redux-logger'
+import { createLogger } from 'redux-logger'
 import createSagaMiddleware from 'redux-saga'
 import reducer from './reducer'
 import history from '../history'
 import saga from './saga'
 
 const sagaMiddleware = createSagaMiddleware()
+const logger = createLogger({
+  collapsed: true
+})
 
 const enhancer = applyMiddleware(
   sagaMiddleware,
