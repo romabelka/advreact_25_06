@@ -1,20 +1,15 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { getEvents } from '../ducks/events'
+import EventsList from '../components/events/events-list'
 
 class EventsPage extends Component {
-  static propTypes = {}
-
-  componentDidMount() {
-    this.props.getEvents()
-  }
-
   render() {
-    return <div>hello</div>
+    return (
+      <div>
+        <h3>Events list</h3>
+        <EventsList />
+      </div>
+    )
   }
 }
 
-export default connect(
-  null,
-  { getEvents }
-)(EventsPage)
+export default EventsPage

@@ -1,13 +1,14 @@
 import { Record, List } from 'immutable'
 import { put, takeLatest, call } from 'redux-saga/effects'
+import { createSelector } from 'reselect'
 import { delay } from 'redux-saga'
 import firebase from 'firebase/app'
 
 // Constants
 export const moduleName = 'events'
-export const GET_EVENTS_REQUEST = 'GET_EVENTS_REQUEST'
-export const GET_EVENTS_SUCCESS = 'GET_EVENTS_SUCCESS'
-export const GET_EVENTS_ERROR = 'GET_EVENTS_ERROR'
+export const GET_EVENTS_REQUEST = `${moduleName}/GET_EVENTS_REQUEST`
+export const GET_EVENTS_SUCCESS = `${moduleName}/GET_EVENTS_SUCCESS`
+export const GET_EVENTS_ERROR = `${moduleName}/GET_EVENTS_ERROR`
 
 // Reducer
 // const ReducerState = Record({
@@ -25,7 +26,7 @@ export const GET_EVENTS_ERROR = 'GET_EVENTS_ERROR'
 // })
 
 const initialState = {
-  entities: [],
+  entities: {},
   fetching: false
 }
 
@@ -53,6 +54,14 @@ export default function reducer(state = initialState, action) {
       return state
   }
 }
+
+// Selectors
+export const stateSelector = (state) => state[moduleName]
+export const eventsSelector = createSelector(
+  stateSelector,
+  // state => state.entities.valueSeq().toArray()
+  (state) => state.entities
+)
 
 // Action Creators
 export const getEvents = () => ({
