@@ -12,7 +12,6 @@ class EventsRoute extends Component {
 
   render() {
     const { loading, events } = this.props
-    console.log('---', loading)
     return (
       <div>
         <h1>Events Page</h1>
