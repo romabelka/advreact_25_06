@@ -1,4 +1,7 @@
 import { Record, List } from 'immutable'
+import { put, takeLatest, call } from 'redux-saga/effects'
+import { delay } from 'redux-saga'
+import firebase from 'firebase/app'
 
 // Constants
 export const moduleName = 'events'
@@ -55,3 +58,21 @@ export default function reducer(state = initialState, action) {
 export const getEvents = () => ({
   type: GET_EVENTS_REQUEST
 })
+
+// Sagas
+function* getEventsSaga() {
+  const ref = firebase.database().ref('/events')
+  // делей для видимости лоадера
+  yield call(delay, 1000)
+
+  const snapshot = yield call([ref, ref.once], 'value')
+
+  yield put({
+    type: GET_EVENTS_SUCCESS,
+    payload: snapshot.val()
+  })
+}
+
+export function* saga() {
+  yield takeLatest(GET_EVENTS_REQUEST, getEventsSaga)
+}
