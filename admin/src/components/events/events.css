@@ -1,0 +1,16 @@
+.events-list-item {
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
+  padding: 24px 16px;
+  font-family: Arial sans-serif;
+  margin: 8px;
+  max-width: 50%;
+}
+
+.events-list-item__title {
+  font-size: 24px;
+}
+
+.events-list-item__date {
+  font-size: 12px;
+  margin-bottom: 12px;
+}
