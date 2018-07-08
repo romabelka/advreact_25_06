@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react'
 import { getEvents, eventsSelector, moduleName } from '../../ducks/events'
 import { connect } from 'react-redux'
+import './events.css'
 
 class EventsList extends Component {
   componentDidMount() {
@@ -8,10 +9,34 @@ class EventsList extends Component {
   }
 
   render() {
-    console.log(this.props.events)
     const { events, fetching } = this.props
-    console.log()
-    return <div>{fetching ? <div>(</div> : <div>))</div>}</div>
+    {
+      if (fetching) {
+        return <div>Loading...</div>
+      } else {
+        return (
+          <div className="events-list">
+            {events.map((event) => (
+              <div className="events-list-item">
+                <div className="events-list-item__title">{event.title}</div>
+                <div className="events-list-item__date">{event.when}</div>
+                <div className="events-list-item__where">{event.where}</div>
+                <div className="events-list-item__url">{event.url}</div>
+              </div>
+            ))}
+          </div>
+        )
+      }
+    }
+    return (
+      <div>
+        {fetching ? (
+          <div>(</div>
+        ) : (
+          <div>{events.map((event) => event.title)}</div>
+        )}
+      </div>
+    )
   }
 }
 

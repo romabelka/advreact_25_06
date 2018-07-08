@@ -12,7 +12,7 @@ export const GET_EVENTS_ERROR = `${moduleName}/GET_EVENTS_ERROR`
 
 // Reducer
 const ReducerState = Record({
-  entities: new OrderedMap([]),
+  entities: new OrderedMap(),
   fetching: false
 })
 
@@ -32,7 +32,9 @@ export default function reducer(state = new ReducerState(), action) {
     case GET_EVENTS_REQUEST:
       return state.set('fetching', true)
     case GET_EVENTS_SUCCESS:
-      return state.set('fetching', false).set('entities', payload)
+      return state
+        .set('fetching', false)
+        .set('entities', eventsResponseToState(payload))
     case GET_EVENTS_ERROR:
       return state.set('fetching', false)
     default:
@@ -42,10 +44,8 @@ export default function reducer(state = new ReducerState(), action) {
 
 // Selectors
 export const stateSelector = (state) => state[moduleName]
-export const eventsSelector = createSelector(
-  stateSelector,
-  // state => state.entities.valueSeq().toArray()
-  (state) => state.entities
+export const eventsSelector = createSelector(stateSelector, (state) =>
+  state.entities.valueSeq().toArray()
 )
 
 // Action Creators
@@ -72,7 +72,9 @@ export function* saga() {
 }
 
 // utils
-export const eventsResponseToState = (events) => {
-  console.log(events)
-  return []
+export const eventsResponseToState = (values) => {
+  return Object.entries(values).reduce(
+    (item, [uid, value]) => item.set(uid, new EventRecord({ uid, ...value })),
+    new OrderedMap({})
+  )
 }
