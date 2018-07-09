@@ -2,9 +2,11 @@ import { combineReducers } from 'redux'
 import { reducer as form } from 'redux-form'
 import authReducer, { moduleName as authModule } from '../ducks/auth'
 import peopleReducer, { moduleName as peopleModule } from '../ducks/people'
+import eventsReducer, { moduleName as eventModule } from '../ducks/events'
 
 export default combineReducers({
   form,
   [authModule]: authReducer,
-  [peopleModule]: peopleReducer
+  [peopleModule]: peopleReducer,
+  [eventModule]: eventsReducer
 })
