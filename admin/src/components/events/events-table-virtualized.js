@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Column } from 'react-virtualized'
 import {
-  fetchAllEvents,
+  fetchLazyEvents,
   selectEvent,
   eventListSelector,
   loadedSelector,
@@ -15,12 +15,12 @@ export class EventsTableVirtualized extends Component {
   static propTypes = {}
 
   componentDidMount() {
-    this.props.fetchAllEvents()
+    this.props.fetchLazyEvents()
   }
 
   render() {
     const { events, loading } = this.props
-    if (loading) return <Loader />
+    if (loading && !events.length) return <Loader />
 
     return (
       <Table
@@ -32,6 +32,7 @@ export class EventsTableVirtualized extends Component {
         headerHeight={50}
         onRowClick={this.handleSelect}
         overscanRowCount={1}
+        onRowsRendered={this.handleScroll}
       >
         <Column dataKey="title" width={200} label="name" />
         <Column dataKey="where" width={300} label="place" />
@@ -43,6 +44,12 @@ export class EventsTableVirtualized extends Component {
   rowGetter = ({ index }) => this.props.events[index]
 
   handleSelect = ({ rowData }) => this.props.selectEvent(rowData.uid)
+
+  handleScroll = ({ stopIndex }) => {
+    if (stopIndex > this.props.events.length - 3) {
+      this.props.fetchLazyEvents()
+    }
+  }
 }
 
 export default connect(
@@ -51,5 +58,5 @@ export default connect(
     loading: loadingSelector(state),
     loaded: loadedSelector(state)
   }),
-  { fetchAllEvents, selectEvent }
+  { fetchLazyEvents, selectEvent }
 )(EventsTableVirtualized)
