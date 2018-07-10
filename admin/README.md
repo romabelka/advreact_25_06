@@ -3,3 +3,6 @@
 
 ## HT2.1 Покрыть тестами auth утку
 ## HT2.2 Сделать загрузку ивентов(window.saveEventsToFB()), показывать список ивентов и лоадер
+
+## HT3.1 Покрыть тестами virtualized таблицу
+## HT3.2 Реализовать lazy loading, догружать по 10 ивентов (.orderByKey().limitToFirst(10).startAt(key))
