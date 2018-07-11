@@ -10,10 +10,14 @@ import { fbToEntities } from './utils'
  * */
 export const moduleName = 'events'
 const prefix = `${appName}/${moduleName}`
+const fetchLimit = 10
 
 export const FETCH_ALL_REQUEST = `${prefix}/FETCH_ALL_REQUEST`
 export const FETCH_ALL_START = `${prefix}/FETCH_ALL_START`
 export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`
+export const FETCH_LAZY_REQUEST = `${prefix}/FETCH_LAZY_REQUEST`
+export const FETCH_LAZY_START = `${prefix}/FETCH_LAZY_START`
+export const FETCH_LAZY_SUCCESS = `${prefix}/FETCH_LAZY_SUCCESS`
 export const TOGGLE_SELECT = `${prefix}/TOGGLE_SELECT`
 
 /**
@@ -48,6 +52,17 @@ export default function reducer(state = new ReducerRecord(), action) {
         .set('loading', false)
         .set('loaded', true)
         .set('entities', fbToEntities(payload, EventRecord))
+
+    case FETCH_LAZY_START:
+      return state.set('loading', true)
+
+    case FETCH_LAZY_SUCCESS: {
+      const loadedEntities = state.entities.size ? state.entities : null
+
+      return state
+        .set('loading', false)
+        .set('entities', fbToEntities(payload, EventRecord, loadedEntities))
+    }
 
     case TOGGLE_SELECT:
       return state.update(
@@ -84,6 +99,11 @@ export const eventListSelector = createSelector(entitiesSelector, (entities) =>
   entities.toArray()
 )
 
+export const lastEventKeySelector = createSelector(
+  eventListSelector,
+  (events) => (events.length ? events[events.length - 1].uid : '')
+)
+
 export const selectionSelector = createSelector(
   stateSelector,
   (state) => state.selected
@@ -103,6 +123,12 @@ export const selectedEventsSelector = createSelector(
 export function fetchAllEvents() {
   return {
     type: FETCH_ALL_REQUEST
+  }
+}
+
+export function fetchLazyEvents() {
+  return {
+    type: FETCH_LAZY_REQUEST
   }
 }
 
@@ -132,6 +158,30 @@ export function* fetchAllSaga() {
   })
 }
 
+export function* fetchLazySaga() {
+  const eventsState = yield select(stateSelector)
+  if (eventsState.loading) return
+
+  yield put({
+    type: FETCH_LAZY_START
+  })
+
+  const fetchStartAt = yield select(lastEventKeySelector)
+  const ref = firebase
+    .database()
+    .ref('events')
+    .orderByKey()
+    .limitToFirst(fetchLimit)
+    .startAt(fetchStartAt)
+  const snapshot = yield call([ref, ref.once], 'value')
+
+  yield put({
+    type: FETCH_LAZY_SUCCESS,
+    payload: snapshot.val()
+  })
+}
+
 export function* saga() {
   yield all([takeEvery(FETCH_ALL_REQUEST, fetchAllSaga)])
+  yield all([takeEvery(FETCH_LAZY_REQUEST, fetchLazySaga)])
 }
