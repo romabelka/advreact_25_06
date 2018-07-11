@@ -11,6 +11,7 @@ export function fbToEntities(values, DataRecord, initailValues) {
     )
   )
 
+  // такой подход для этой утилиты ок? Или лучше выделить новую функцию?
   if (initailValues) {
     return new List(initailValues).concat(newList)
   }
