@@ -16,15 +16,28 @@ export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`
 /**
  * Reducer
  * */
-const ReducerState = Record({
-  entities: new List([])
-})
-
 const PersonRecord = Record({
-  id: null,
+  uid: null,
   firstName: null,
   lastName: null,
   email: null
+})
+
+const ReducerState = Record({
+  entities: new List([
+    new PersonRecord({
+      firstName: 'Roman',
+      lastName: 'Iakobchuk',
+      email: 'asdf@adsf.com',
+      uid: 1
+    }),
+    new PersonRecord({
+      firstName: 'ASD',
+      lastName: 'SDFsdfg',
+      email: 'gjkhk@adsf.com',
+      uid: 2
+    })
+  ])
 })
 
 export default function reducer(state = new ReducerState(), action) {
@@ -65,11 +78,11 @@ export function addPerson(person) {
  */
 
 export function* addPersonSaga(action) {
-  const id = yield call(generateId)
+  const uid = yield call(generateId)
 
   const successAction = {
     type: ADD_PERSON_SUCCESS,
-    payload: { id, ...action.payload.person }
+    payload: { uid, ...action.payload.person }
   }
 
   yield put(successAction)
