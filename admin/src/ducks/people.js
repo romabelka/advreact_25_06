@@ -13,6 +13,8 @@ const prefix = `${appName}/${moduleName}`
 export const ADD_PERSON = `${prefix}/ADD_PERSON`
 export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`
 
+export const ADD_EVENT = `${prefix}/ADD_EVENT`
+
 /**
  * Reducer
  * */
@@ -20,7 +22,8 @@ const PersonRecord = Record({
   uid: null,
   firstName: null,
   lastName: null,
-  email: null
+  email: null,
+  events: []
 })
 
 const ReducerState = Record({
@@ -62,6 +65,13 @@ export const peopleSelector = createSelector(stateSelector, (state) =>
   state.entities.valueSeq().toArray()
 )
 
+export const uidSelector = (_, props) => props.uid
+export const personSelector = createSelector(
+  stateSelector,
+  uidSelector,
+  (state, uid) => state.entities.find((person) => person.uid === uid)
+)
+
 /**
  * Action Creators
  * */
@@ -70,6 +80,16 @@ export function addPerson(person) {
   return {
     type: ADD_PERSON,
     payload: { person }
+  }
+}
+
+export function addEventToPerson(eventUid, personUid) {
+  return {
+    type: ADD_EVENT,
+    payload: {
+      eventUid,
+      personUid
+    }
   }
 }
 

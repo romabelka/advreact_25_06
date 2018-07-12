@@ -6,3 +6,5 @@
 
 ## HT3.1 Покрыть тестами virtualized таблицу
 ## HT3.2 Реализовать lazy loading, догружать по 10 ивентов (.orderByKey().limitToFirst(10).startAt(key))
+
+## HT4 Переписать people.entities на объект, сохранять id ивентов в людях. Хранить все в firebase
