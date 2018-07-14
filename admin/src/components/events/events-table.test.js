@@ -1,6 +1,5 @@
 import React from 'react'
-import Enzyme, { shallow } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
+import { shallow } from 'enzyme'
 import { EventsTable } from './events-table'
 import mockedEvents from '../../mocks/conferences'
 import Loader from '../common/loader'
@@ -9,8 +8,6 @@ const events = mockedEvents.map((event, index) => ({
   ...event,
   uid: index.toString()
 }))
-
-Enzyme.configure({ adapter: new Adapter() })
 
 describe('EventsTable', () => {
   it('should render a loader', () => {

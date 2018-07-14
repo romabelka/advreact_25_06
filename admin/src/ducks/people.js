@@ -13,18 +13,34 @@ const prefix = `${appName}/${moduleName}`
 export const ADD_PERSON = `${prefix}/ADD_PERSON`
 export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`
 
+export const ADD_EVENT = `${prefix}/ADD_EVENT`
+
 /**
  * Reducer
  * */
-const ReducerState = Record({
-  entities: new List([])
-})
-
 const PersonRecord = Record({
-  id: null,
+  uid: null,
   firstName: null,
   lastName: null,
-  email: null
+  email: null,
+  events: []
+})
+
+const ReducerState = Record({
+  entities: new List([
+    new PersonRecord({
+      firstName: 'Roman',
+      lastName: 'Iakobchuk',
+      email: 'asdf@adsf.com',
+      uid: 1
+    }),
+    new PersonRecord({
+      firstName: 'ASD',
+      lastName: 'SDFsdfg',
+      email: 'gjkhk@adsf.com',
+      uid: 2
+    })
+  ])
 })
 
 export default function reducer(state = new ReducerState(), action) {
@@ -49,6 +65,13 @@ export const peopleSelector = createSelector(stateSelector, (state) =>
   state.entities.valueSeq().toArray()
 )
 
+export const uidSelector = (_, props) => props.uid
+export const personSelector = createSelector(
+  stateSelector,
+  uidSelector,
+  (state, uid) => state.entities.find((person) => person.uid === uid)
+)
+
 /**
  * Action Creators
  * */
@@ -60,16 +83,26 @@ export function addPerson(person) {
   }
 }
 
+export function addEventToPerson(eventUid, personUid) {
+  return {
+    type: ADD_EVENT,
+    payload: {
+      eventUid,
+      personUid
+    }
+  }
+}
+
 /**
  * Sagas
  */
 
 export function* addPersonSaga(action) {
-  const id = yield call(generateId)
+  const uid = yield call(generateId)
 
   const successAction = {
     type: ADD_PERSON_SUCCESS,
-    payload: { id, ...action.payload.person }
+    payload: { uid, ...action.payload.person }
   }
 
   yield put(successAction)
