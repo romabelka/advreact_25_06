@@ -1,10 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { peopleSelector } from '../../ducks/people'
+import { peopleSelector, fetchPersons } from '../../ducks/people'
 import PersonCard from './person-card'
 
 class PeopleList extends Component {
   static propTypes = {}
+
+  componentDidMount() {
+    this.props.fetchPersons()
+  }
 
   render() {
     return (
@@ -17,6 +21,9 @@ class PeopleList extends Component {
   }
 }
 
-export default connect((state) => ({
-  people: peopleSelector(state)
-}))(PeopleList)
+export default connect(
+  (state) => ({
+    people: peopleSelector(state)
+  }),
+  { fetchPersons }
+)(PeopleList)

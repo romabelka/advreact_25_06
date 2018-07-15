@@ -5,12 +5,12 @@ import 'firebase/database'
 export const appName = 'adv-react-25-06'
 
 const config = {
-  apiKey: 'AIzaSyDzqwnZ_39QyqhxYZVPjVH8eBww7DUBmVc',
-  authDomain: `${appName}.firebaseapp.com`,
-  databaseURL: `https://${appName}.firebaseio.com`,
-  projectId: appName,
-  storageBucket: '',
-  messagingSenderId: '874599443389'
+  apiKey: 'AIzaSyAYsZJuajlVT1qjHN0t6O4aOgCQ-Rp9-4o',
+  authDomain: 'admin-app-e57f9.firebaseapp.com',
+  databaseURL: 'https://admin-app-e57f9.firebaseio.com',
+  projectId: 'admin-app-e57f9',
+  storageBucket: 'admin-app-e57f9.appspot.com',
+  messagingSenderId: '517072570954'
 }
 
 initializeApp(config)
