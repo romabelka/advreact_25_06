@@ -17,6 +17,9 @@ export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`
 export const FETCH_PERSONS = `${prefix}/FETCH_PERSONS`
 export const FETCH_PERSONS_SUCCESS = `${prefix}/FETCH_PERSONS_SUCCESS`
 
+export const DELETE_PERSON = `${prefix}/DELETE_PERSON`
+export const DELETE_PERSON_SUCCESS = `${prefix}/DELETE_PERSON_SUCCESS`
+
 export const ADD_EVENT = `${prefix}/ADD_EVENT`
 
 /**
@@ -42,7 +45,8 @@ export default function reducer(state = new ReducerState(), action) {
       return state.mergeIn(['entities'], fbToEntities(payload, PersonRecord))
     case FETCH_PERSONS_SUCCESS:
       return state.mergeIn(['entities'], fbToEntities(payload, PersonRecord))
-
+    case DELETE_PERSON_SUCCESS:
+      return state.removeIn(['entities', action.payload])
     default:
       return state
   }
@@ -90,16 +94,22 @@ export function fetchPersons() {
   }
 }
 
+export function deletePerson(personId) {
+  return {
+    type: DELETE_PERSON,
+    payload: { personId }
+  }
+}
 /**
  * Sagas
  */
 
 export function* addPersonSaga(action) {
-  const uid = yield call(generateId)
+  // const uid = yield call(generateId)
 
   const successAction = {
     type: ADD_PERSON_SUCCESS,
-    payload: { uid, ...action.payload.person }
+    payload: action.payload.person
   }
   const ref = firebase.database().ref('/peoples')
   yield call([ref, ref.push], successAction.payload)
@@ -110,15 +120,27 @@ export function* addPersonSaga(action) {
 export function* fetchPersonsSaga() {
   const ref = firebase.database().ref('/peoples')
   const resp = yield call([ref, ref.once], 'value')
+  if (resp.val()) {
+    yield put({
+      type: FETCH_PERSONS_SUCCESS,
+      payload: resp.val()
+    })
+  }
+}
+
+export function* deletePersonSaga(action) {
+  const ref = firebase.database().ref(`/peoples/${action.payload.personId}`)
+  yield call([ref, ref.remove])
   yield put({
-    type: FETCH_PERSONS_SUCCESS,
-    payload: resp.val()
+    type: DELETE_PERSON_SUCCESS,
+    payload: action.payload
   })
 }
 
 export function* saga() {
   yield all([
     takeEvery(ADD_PERSON, addPersonSaga),
-    takeEvery(FETCH_PERSONS, fetchPersonsSaga)
+    takeEvery(FETCH_PERSONS, fetchPersonsSaga),
+    takeEvery(DELETE_PERSON, deletePersonSaga)
   ])
 }
