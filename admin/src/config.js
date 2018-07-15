@@ -3,14 +3,15 @@ import 'firebase/auth'
 import 'firebase/database'
 
 export const appName = 'adv-react-25-06'
+const projectId = `${appName}-ikachura`
 
 const config = {
-  apiKey: 'AIzaSyDzqwnZ_39QyqhxYZVPjVH8eBww7DUBmVc',
-  authDomain: `${appName}.firebaseapp.com`,
-  databaseURL: `https://${appName}.firebaseio.com`,
-  projectId: appName,
+  apiKey: 'AIzaSyDK_BVpTpGjc4C7hQswy7UdZcyBwOhUy60',
+  authDomain: `${projectId}.firebaseapp.com`,
+  databaseURL: `https://${projectId}.firebaseio.com`,
+  projectId,
   storageBucket: '',
-  messagingSenderId: '874599443389'
+  messagingSenderId: '266838923267'
 }
 
 initializeApp(config)

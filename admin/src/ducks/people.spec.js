@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects'
 import { reset } from 'redux-form'
-import { ADD_PERSON, ADD_PERSON_SUCCESS, addPersonSaga } from './people'
+import { ADD_PERSON_REQUEST, ADD_PERSON_SUCCESS, addPersonSaga } from './people'
 import { generateId } from './utils'
 
 describe('Saga', () => {
@@ -11,7 +11,7 @@ describe('Saga', () => {
       email: 'test@javascript.ru'
     }
     const action = {
-      type: ADD_PERSON,
+      type: ADD_PERSON_REQUEST,
       payload: { person }
     }
 
@@ -19,12 +19,12 @@ describe('Saga', () => {
 
     expect(saga.next().value).toEqual(call(generateId))
 
-    const id = generateId()
+    const uid = generateId()
 
-    expect(saga.next(id).value).toEqual(
+    expect(saga.next(uid).value).toEqual(
       put({
         type: ADD_PERSON_SUCCESS,
-        payload: { id, ...person }
+        payload: { uid, ...person }
       })
     )
 

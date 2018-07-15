@@ -16,8 +16,7 @@ class PersonCard extends Component {
     return (
       <div style={dndStyle}>
         {connectDragSource(<h3>{person.email}</h3>)}
-        <h4>{person.firstName}</h4>
-        <h4>{person.lastName}</h4>
+        [{person.firstName} {person.lastName}]
       </div>
     )
   }

@@ -11,18 +11,24 @@ import { fbToEntities } from './utils'
 export const moduleName = 'events'
 const prefix = `${appName}/${moduleName}`
 
+export const TOGGLE_SELECT = `${prefix}/TOGGLE_SELECT`
+
 export const FETCH_ALL_REQUEST = `${prefix}/FETCH_ALL_REQUEST`
 export const FETCH_ALL_START = `${prefix}/FETCH_ALL_START`
 export const FETCH_ALL_SUCCESS = `${prefix}/FETCH_ALL_SUCCESS`
-export const TOGGLE_SELECT = `${prefix}/TOGGLE_SELECT`
 
 export const FETCH_LAZY_REQUEST = `${prefix}/FETCH_LAZY_REQUEST`
 export const FETCH_LAZY_START = `${prefix}/FETCH_LAZY_START`
 export const FETCH_LAZY_SUCCESS = `${prefix}/FETCH_LAZY_SUCCESS`
 
+export const DELETE_EVENT_REQUEST = `${prefix}/DELETE_EVENT_REQUEST`
+export const DELETE_EVENT_START = `${prefix}/DELETE_EVENT_START`
+export const DELETE_EVENT_SUCCESS = `${prefix}/DELETE_EVENT_SUCCESS`
+
 /**
  * Reducer
  * */
+
 export const ReducerRecord = Record({
   loading: false,
   loaded: false,
@@ -68,6 +74,9 @@ export default function reducer(state = new ReducerRecord(), action) {
             ? selected.remove(payload.uid)
             : selected.add(payload.uid)
       )
+
+    case DELETE_EVENT_SUCCESS:
+      return state.deleteIn(['entities', payload.uid])
 
     default:
       return state
@@ -128,6 +137,13 @@ export function fetchLazy() {
   }
 }
 
+export function deleteEvent(uid) {
+  return {
+    type: DELETE_EVENT_REQUEST,
+    payload: { uid }
+  }
+}
+
 /**
  * Sagas
  * */
@@ -180,6 +196,27 @@ export const fetchLazySaga = function*() {
   }
 }
 
+export const deleteEventSaga = function*(action) {
+  yield put({
+    type: DELETE_EVENT_START
+  })
+
+  const payload = action.payload
+  const uid = payload.uid
+
+  const ref = firebase.database().ref(`/events/${uid}`)
+  yield call([ref, ref.remove])
+
+  yield put({
+    type: DELETE_EVENT_SUCCESS,
+    payload
+  })
+}
+
 export function* saga() {
-  yield all([takeEvery(FETCH_ALL_REQUEST, fetchAllSaga), fetchLazySaga()])
+  yield all([
+    takeEvery(FETCH_ALL_REQUEST, fetchAllSaga),
+    fetchLazySaga(),
+    takeEvery(DELETE_EVENT_REQUEST, deleteEventSaga)
+  ])
 }

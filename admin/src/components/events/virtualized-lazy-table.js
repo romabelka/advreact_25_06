@@ -1,5 +1,9 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Table, Column, InfiniteLoader } from 'react-virtualized'
+import 'react-virtualized/styles.css'
+
+import DraggableEventCell from './draggable-event-cell'
 import {
   loadingSelector,
   loadedSelector,
@@ -7,8 +11,6 @@ import {
   fetchLazy,
   eventListSelector
 } from '../../ducks/events'
-import { Table, Column, InfiniteLoader } from 'react-virtualized'
-import 'react-virtualized/styles.css'
 
 export class EventLazyTable extends Component {
   static propTypes = {}
@@ -39,7 +41,12 @@ export class EventLazyTable extends Component {
             onRowsRendered={onRowsRendered}
             rowClassName="test__event_table_row"
           >
-            <Column dataKey="title" width={200} label="name" />
+            <Column
+              dataKey="title"
+              width={200}
+              label="name"
+              cellRenderer={(data) => <DraggableEventCell {...data} />}
+            />
             <Column dataKey="where" width={300} label="place" />
             <Column dataKey="url" width={300} label="url" />
           </Table>

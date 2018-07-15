@@ -10,9 +10,14 @@ class App extends Component {
     return (
       <div>
         <CustomDragLayer />
+        <NavLink to="/admin/all" activeStyle={{ color: 'red' }}>
+          all
+        </NavLink>
+        &nbsp;
         <NavLink to="/admin/events" activeStyle={{ color: 'red' }}>
           events
         </NavLink>
+        &nbsp;
         <NavLink to="/admin/people" activeStyle={{ color: 'red' }}>
           people
         </NavLink>
