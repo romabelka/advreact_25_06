@@ -2,7 +2,7 @@ import { appName } from '../config'
 import { Record, List } from 'immutable'
 import { reset } from 'redux-form'
 import { createSelector } from 'reselect'
-import { put, takeEvery, call } from 'redux-saga/effects'
+import { put, takeEvery, call, all } from 'redux-saga/effects'
 import { generateId } from './utils'
 
 /**
@@ -12,6 +12,8 @@ export const moduleName = 'people'
 const prefix = `${appName}/${moduleName}`
 export const ADD_PERSON = `${prefix}/ADD_PERSON`
 export const ADD_PERSON_SUCCESS = `${prefix}/ADD_PERSON_SUCCESS`
+export const DELETE_PERSON = `${prefix}/DELETE_PERSON`
+export const DELETE_PERSON_SUCCESS = `${prefix}/DELETE_PERSON_SUCCESS`
 
 export const ADD_EVENT = `${prefix}/ADD_EVENT`
 
@@ -52,6 +54,13 @@ export default function reducer(state = new ReducerState(), action) {
         entities.push(new PersonRecord(payload.person))
       )
 
+    case DELETE_PERSON:
+      return state.update('entities', (entities) =>
+        entities.filter(function(item) {
+          return item.get('uid') !== payload.personUid
+        })
+      )
+
     default:
       return state
   }
@@ -83,6 +92,13 @@ export function addPerson(person) {
   }
 }
 
+export function deletePerson(personUid) {
+  return {
+    type: DELETE_PERSON,
+    payload: { personUid }
+  }
+}
+
 export function addEventToPerson(eventUid, personUid) {
   return {
     type: ADD_EVENT,
@@ -109,6 +125,18 @@ export function* addPersonSaga(action) {
   yield put(reset('person'))
 }
 
+export function* deletePersonSaga(action) {
+  const successAction = {
+    type: DELETE_PERSON_SUCCESS,
+    payload: { uid: action.payload.personUid }
+  }
+
+  yield put(successAction)
+}
+
 export function* saga() {
-  yield takeEvery(ADD_PERSON, addPersonSaga)
+  yield all([
+    takeEvery(ADD_PERSON, addPersonSaga),
+    takeEvery(DELETE_PERSON, deletePersonSaga)
+  ])
 }

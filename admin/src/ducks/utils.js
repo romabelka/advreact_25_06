@@ -5,8 +5,7 @@ export function generateId() {
 }
 
 export function fbToEntities(values, DataRecord) {
-  return Object.entries(values).reduce(
-    (acc, [uid, value]) => acc.set(uid, new DataRecord({ uid, ...value })),
-    new OrderedMap({})
-  )
+  return Object.entries(values).reduce((acc, [uid, value]) => {
+    return acc.set(uid, new DataRecord({ uid, ...value }))
+  }, new OrderedMap({}))
 }
