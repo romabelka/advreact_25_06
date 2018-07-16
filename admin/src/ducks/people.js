@@ -1,7 +1,20 @@
 import { appName } from '../config'
 import { Record, OrderedMap } from 'immutable'
 import { createSelector } from 'reselect'
-import { put, call, all, takeEvery, select } from 'redux-saga/effects'
+import {
+  put,
+  call,
+  all,
+  takeEvery,
+  select,
+  fork,
+  spawn,
+  cancel,
+  cancelled,
+  race,
+  take
+} from 'redux-saga/effects'
+import { delay, eventChannel } from 'redux-saga'
 import { reset } from 'redux-form'
 import firebase from 'firebase/app'
 import { fbToEntities } from './utils'
@@ -43,8 +56,10 @@ export default function reducer(state = new ReducerState(), action) {
   const { type, payload } = action
 
   switch (type) {
+    /*
     case ADD_PERSON_SUCCESS:
       return state.setIn(['entities', payload.uid], new PersonRecord(payload))
+*/
 
     case FETCH_ALL_SUCCESS:
       return state.set('entities', fbToEntities(payload, PersonRecord))
@@ -172,10 +187,65 @@ export function* deletePersonSaga({ payload }) {
   } catch (_) {}
 }
 
+export function* cancelablePeopleSyncSaga() {
+  yield race({
+    sync: syncPeopleSaga(),
+    timeout: delay(5000)
+  })
+  /*
+    const process = yield spawn(syncPeopleSaga)
+    yield delay(5000)
+    yield cancel(process)
+*/
+}
+
+export function* syncPeopleSaga() {
+  try {
+    while (true) {
+      yield call(fetchAllSaga)
+      yield delay(2000)
+
+      //    if (!firstRun) throw new Error('some network error')
+      //     firstRun = false
+    }
+  } finally {
+    if (yield cancelled()) console.log('---', 'process was canceled')
+  }
+}
+
+const createEventChannel = () =>
+  eventChannel((emit) => {
+    const callback = (data) => emit({ data })
+
+    firebase
+      .database()
+      .ref('people')
+      .on('value', callback)
+
+    return () =>
+      firebase
+        .database()
+        .ref('people')
+        .off('value', callback)
+  })
+
+export function* realtimeSyncSaga() {
+  const channel = yield call(createEventChannel)
+  while (true) {
+    const { data } = yield take(channel)
+
+    yield put({
+      type: FETCH_ALL_SUCCESS,
+      payload: data.val()
+    })
+  }
+}
+
 export const saga = function*() {
+  yield spawn(realtimeSyncSaga)
+
   yield all([
     takeEvery(ADD_PERSON, addPersonSaga),
-    takeEvery(FETCH_ALL_REQUEST, fetchAllSaga),
     takeEvery(ADD_EVENT_REQUEST, addEventToPersonSaga),
     takeEvery(DELETE_PERSON_REQUEST, deletePersonSaga)
   ])
