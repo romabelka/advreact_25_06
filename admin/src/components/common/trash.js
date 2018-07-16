@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { DropTarget } from 'react-dnd'
 import { connect } from 'react-redux'
+import { Motion, spring } from 'react-motion'
 import { deleteEvent } from '../../ducks/events'
 import { deletePerson } from '../../ducks/people'
 
@@ -17,7 +18,18 @@ class Trash extends Component {
       top: 0,
       right: 0
     }
-    return connectDropTarget(<div style={style}>Trash</div>)
+    return (
+      <Motion
+        style={{ opacity: spring(1, { stiffness: 40, damping: 20 }) }}
+        defaultStyle={{ opacity: 0 }}
+      >
+        {(interpolatedStyle) =>
+          connectDropTarget(
+            <div style={{ ...style, ...interpolatedStyle }}>Trash</div>
+          )
+        }
+      </Motion>
+    )
   }
 }
 
