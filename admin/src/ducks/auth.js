@@ -2,7 +2,16 @@ import { appName } from '../config'
 import { Record } from 'immutable'
 import firebase from 'firebase/app'
 import { createSelector } from 'reselect'
-import { takeEvery, put, call, apply, take, all } from 'redux-saga/effects'
+import {
+  takeEvery,
+  put,
+  call,
+  apply,
+  take,
+  all,
+  spawn
+} from 'redux-saga/effects'
+import { eventChannel } from 'redux-saga'
 
 /**
  * Constants
@@ -69,6 +78,26 @@ export function signUp(email, password) {
  * Sagas
  */
 
+const createEventChannel = () =>
+  eventChannel((emit) =>
+    firebase.auth().onAuthStateChanged((user) => emit({ user }))
+  )
+
+export function* realtimeSyncSaga() {
+  const channel = yield call(createEventChannel)
+
+  while (true) {
+    const { user } = yield take(channel)
+
+    if (user) {
+      yield put({
+        type: SIGN_IN_SUCCESS,
+        payload: { user }
+      })
+    }
+  }
+}
+
 export function* signUpSaga({ payload }) {
   const auth = firebase.auth()
 
@@ -116,14 +145,7 @@ export function* signInSaga() {
 }
 
 export function* saga() {
+  yield spawn(realtimeSyncSaga)
+
   yield all([takeEvery(SIGN_UP_REQUEST, signUpSaga), signInSaga()])
 }
-
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    window.store.dispatch({
-      type: SIGN_IN_SUCCESS,
-      payload: { user }
-    })
-  }
-})
