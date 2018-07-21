@@ -7,9 +7,7 @@ import {
   all,
   takeEvery,
   select,
-  fork,
   spawn,
-  cancel,
   cancelled,
   race,
   take
