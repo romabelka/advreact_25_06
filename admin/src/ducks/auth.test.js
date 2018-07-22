@@ -9,7 +9,8 @@ import reducer, {
   SIGN_IN_REQUESTS_LIMIT,
   ReducerRecord
 } from './auth'
-import { take, call, apply, put } from 'redux-saga/effects'
+import { take, call, apply, put, actionChannel } from 'redux-saga/effects'
+import { channel, buffers } from 'redux-saga'
 
 /**
  * Saga tests
@@ -31,10 +32,15 @@ it('should sign up', () => {
     payload: authData
   }
 
-  const saga = signUpSaga(requestAction)
+  const saga = signUpSaga()
   const auth = firebase.auth()
 
-  expect(saga.next().value).toEqual(
+  const mockChan = channel()
+  expect(saga.next().value).toEqual(actionChannel(SIGN_UP_REQUEST))
+
+  expect(saga.next(mockChan).value).toEqual(take(mockChan))
+
+  expect(saga.next(requestAction).value).toEqual(
     call(
       [auth, auth.createUserWithEmailAndPassword],
       authData.email,
@@ -66,7 +72,16 @@ it('should sign in', () => {
 
   const saga = signInSaga()
 
-  expect(saga.next().value).toEqual(take(SIGN_IN_REQUEST))
+  const mockChan = channel()
+  const mockBuffer = buffers.sliding(1)
+
+  //запрашивает буфер
+  saga.next().value
+
+  expect(saga.next(mockBuffer).value).toEqual(
+    actionChannel(SIGN_IN_REQUEST, mockBuffer)
+  )
+  expect(saga.next(mockChan).value).toEqual(take(mockChan))
 
   expect(saga.next(requestAction).value).toEqual(
     apply(auth, auth.signInWithEmailAndPassword, [
@@ -95,8 +110,18 @@ it('should not allow to sign in more then 3 times', () => {
 
   const saga = signInSaga()
 
+  const mockChan = channel()
+  const mockBuffer = buffers.sliding(1)
+
+  //запрашивает буфер
+  saga.next().value
+
+  expect(saga.next(mockBuffer).value).toEqual(
+    actionChannel(SIGN_IN_REQUEST, mockBuffer)
+  )
+
   for (let i = 0; i < 3; i++) {
-    expect(saga.next().value).toEqual(take(SIGN_IN_REQUEST))
+    expect(saga.next(mockChan).value).toEqual(take(mockChan))
 
     saga.next(requestAction)
     saga.throw(new Error('invalid password'))
