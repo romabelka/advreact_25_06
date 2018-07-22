@@ -2,7 +2,16 @@ import { appName } from '../config'
 import { Record } from 'immutable'
 import firebase from 'firebase/app'
 import { createSelector } from 'reselect'
-import { takeEvery, put, call, apply, take, all } from 'redux-saga/effects'
+import {
+  put,
+  call,
+  apply,
+  take,
+  all,
+  actionChannel,
+  fork
+} from 'redux-saga/effects'
+import { buffers } from 'redux-saga'
 
 /**
  * Constants
@@ -69,31 +78,35 @@ export function signUp(email, password) {
  * Sagas
  */
 
-export function* signUpSaga({ payload }) {
+export function* signUpSaga() {
   const auth = firebase.auth()
+  const channel = yield actionChannel(SIGN_UP_REQUEST)
+  while (true) {
+    const { payload } = yield take(channel)
+    try {
+      const user = yield call(
+        [auth, auth.createUserWithEmailAndPassword],
+        payload.email,
+        payload.password
+      )
 
-  try {
-    const user = yield call(
-      [auth, auth.createUserWithEmailAndPassword],
-      payload.email,
-      payload.password
-    )
-
-    yield put({
-      type: SIGN_UP_SUCCESS,
-      payload: { user }
-    })
-  } catch (error) {
-    yield put({
-      type: SIGN_UP_ERROR,
-      error
-    })
+      yield put({
+        type: SIGN_UP_SUCCESS,
+        payload: { user }
+      })
+    } catch (error) {
+      yield put({
+        type: SIGN_UP_ERROR,
+        error
+      })
+    }
   }
 }
 
 export function* signInSaga() {
+  const channel = yield actionChannel(SIGN_IN_REQUEST, yield buffers.sliding(1))
   for (let i = 0; i < 3; i++) {
-    const { payload } = yield take(SIGN_IN_REQUEST)
+    const { payload } = yield take(channel)
 
     const auth = firebase.auth()
 
@@ -116,7 +129,8 @@ export function* signInSaga() {
 }
 
 export function* saga() {
-  yield all([takeEvery(SIGN_UP_REQUEST, signUpSaga), signInSaga()])
+  yield fork(signUpSaga())
+  yield fork(signInSaga())
 }
 
 firebase.auth().onAuthStateChanged((user) => {

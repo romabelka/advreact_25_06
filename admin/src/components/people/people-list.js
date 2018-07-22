@@ -5,6 +5,7 @@ import { List } from 'react-virtualized'
 import PersonCard from './person-card'
 
 import 'react-virtualized/styles.css'
+import { TransitionMotion, spring } from 'react-motion'
 
 class PeopleList extends Component {
   componentDidMount() {
@@ -13,23 +14,41 @@ class PeopleList extends Component {
 
   render() {
     return (
-      <List
-        rowRenderer={this.rowRenderer}
-        rowCount={this.props.people.length}
-        rowHeight={150}
-        height={400}
-        width={400}
-      />
+      <TransitionMotion styles={this.styles} willEnter={this.willEnter}>
+        {(interpolated) => (
+          <List
+            rowCount={interpolated.length}
+            width={400}
+            height={400}
+            rowHeight={150}
+            rowRenderer={this.rowRenderer(interpolated)}
+          />
+        )}
+      </TransitionMotion>
     )
   }
 
-  rowRenderer = ({ style, index, key }) => {
-    const person = this.props.people[index]
+  rowRenderer = (interpolated) => ({ style, index, key }) => {
+    const rowCtx = interpolated[index]
     return (
-      <div style={style} key={key}>
-        <PersonCard person={person} />
+      <div style={{ ...style, ...rowCtx.style }} key={key}>
+        <PersonCard person={rowCtx.data} />
       </div>
     )
+  }
+
+  willEnter = () => ({
+    opacity: 0
+  })
+
+  get styles() {
+    return this.props.people.map((person) => ({
+      key: person.uid,
+      style: {
+        opacity: spring(1, { stiffness: 150, damping: 30 })
+      },
+      data: person
+    }))
   }
 }
 
