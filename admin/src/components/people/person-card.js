@@ -11,7 +11,7 @@ class PersonCard extends Component {
   render() {
     const { person, connectDragSource, isDragging } = this.props
     const dndStyle = {
-      opacity: isDragging ? 0.3 : 1
+      opacity: isDragging ? 0.3 : 'inherit'
     }
     return (
       <div style={dndStyle}>
