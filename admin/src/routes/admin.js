@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom'
 import PersonPage from './person-page'
 import EventsPage from './events-page'
 import AllPage from './all-page'
+import Trash from '../components/common/trash'
 
 class AdminPage extends Component {
   render() {
@@ -12,6 +13,7 @@ class AdminPage extends Component {
         <Route path="/admin/people" component={PersonPage} />
         <Route path="/admin/events" component={EventsPage} />
         <Route path="/admin/all" component={AllPage} />
+        <Trash />
       </div>
     )
   }

@@ -1,27 +1,54 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { List } from 'react-virtualized'
+import { TransitionMotion, spring } from 'react-motion'
 import SelectedEventCard from './selected-event-card'
 import { selectedEventsSelector } from '../../ducks/events'
 
 class SelectedEvents extends Component {
   render() {
-    const { events } = this.props
     return (
-      <List
-        rowCount={events.length}
-        width={500}
-        height={400}
-        rowHeight={200}
-        rowRenderer={this.rowRenderer}
-      />
+      <TransitionMotion
+        styles={this.styles}
+        willEnter={this.willEnter}
+        willLeave={this.willLeave}
+      >
+        {(interpolated) => (
+          <List
+            rowCount={interpolated.length}
+            width={500}
+            height={400}
+            rowHeight={200}
+            rowRenderer={this.rowRenderer(interpolated)}
+          />
+        )}
+      </TransitionMotion>
     )
   }
 
-  rowRenderer = ({ index, key, style }) => {
+  willEnter = () => ({
+    opacity: 0
+  })
+
+  willLeave = () => ({
+    opacity: spring(0, { stiffness: 20, damping: 40 })
+  })
+
+  get styles() {
+    return this.props.events.map((event) => ({
+      key: event.uid,
+      style: {
+        opacity: spring(1, { stiffness: 50, damping: 40 })
+      },
+      data: event
+    }))
+  }
+
+  rowRenderer = (interpolated) => ({ index, key, style }) => {
+    const rowCtx = interpolated[index]
     return (
-      <div key={key} style={style}>
-        <SelectedEventCard event={this.props.events[index]} />
+      <div key={rowCtx.key} style={{ ...style, ...rowCtx.style }}>
+        <SelectedEventCard event={rowCtx.data} />
       </div>
     )
   }

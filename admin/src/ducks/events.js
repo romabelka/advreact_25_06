@@ -20,6 +20,9 @@ export const FETCH_LAZY_REQUEST = `${prefix}/FETCH_LAZY_REQUEST`
 export const FETCH_LAZY_START = `${prefix}/FETCH_LAZY_START`
 export const FETCH_LAZY_SUCCESS = `${prefix}/FETCH_LAZY_SUCCESS`
 
+export const DELETE_EVENT_REQUEST = `${prefix}/DELETE_EVENT_REQUEST`
+export const DELETE_EVENT_SUCCESS = `${prefix}/DELETE_EVENT_SUCCESS`
+
 /**
  * Reducer
  * */
@@ -69,6 +72,15 @@ export default function reducer(state = new ReducerRecord(), action) {
             : selected.add(payload.uid)
       )
 
+    case DELETE_EVENT_REQUEST:
+      return state.set('loading', true)
+
+    case DELETE_EVENT_SUCCESS:
+      return state
+        .set('loading', false)
+        .deleteIn(['entities', payload.uid])
+        .update('selected', (selected) => selected.remove(payload.uid))
+
     default:
       return state
   }
@@ -107,6 +119,13 @@ export const selectedEventsSelector = createSelector(
     eventList.filter((event) => selectedIds.has(event.uid))
 )
 
+export const idSelector = (state, props) => props.uid
+export const eventSelector = createSelector(
+  entitiesSelector,
+  idSelector,
+  (entities, id) => entities.get(id)
+)
+
 /**
  * Action Creators
  * */
@@ -125,6 +144,13 @@ export const selectEvent = (uid) => ({
 export function fetchLazy() {
   return {
     type: FETCH_LAZY_REQUEST
+  }
+}
+
+export function deleteEvent(uid) {
+  return {
+    type: DELETE_EVENT_REQUEST,
+    payload: { uid }
   }
 }
 
@@ -180,6 +206,24 @@ export const fetchLazySaga = function*() {
   }
 }
 
+export const deleteEventSaga = function*(action) {
+  const { payload } = action
+  const ref = firebase.database().ref(`events/${payload.uid}`)
+
+  try {
+    yield call([ref, ref.remove])
+
+    yield put({
+      type: DELETE_EVENT_SUCCESS,
+      payload
+    })
+  } catch (_) {}
+}
+
 export function* saga() {
-  yield all([takeEvery(FETCH_ALL_REQUEST, fetchAllSaga), fetchLazySaga()])
+  yield all([
+    takeEvery(FETCH_ALL_REQUEST, fetchAllSaga),
+    fetchLazySaga(),
+    takeEvery(DELETE_EVENT_REQUEST, deleteEventSaga)
+  ])
 }
