@@ -76,7 +76,7 @@ it('should sign in', () => {
   const mockBuffer = buffers.sliding(1)
 
   //запрашивает буфер
-  saga.next().value
+  saga.next()
 
   expect(saga.next(mockBuffer).value).toEqual(
     actionChannel(SIGN_IN_REQUEST, mockBuffer)
@@ -114,7 +114,7 @@ it('should not allow to sign in more then 3 times', () => {
   const mockBuffer = buffers.sliding(1)
 
   //запрашивает буфер
-  saga.next().value
+  saga.next()
 
   expect(saga.next(mockBuffer).value).toEqual(
     actionChannel(SIGN_IN_REQUEST, mockBuffer)
