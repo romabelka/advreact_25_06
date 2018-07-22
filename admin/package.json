@@ -9,10 +9,14 @@
     "history": "^4.7.2",
     "immutable": "^3.8.2",
     "react": "^16.4.1",
+    "react-dnd": "^5.0.0",
+    "react-dnd-html5-backend": "^5.0.1",
     "react-dom": "^16.4.1",
+    "react-motion": "^0.5.2",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.4",
+    "react-virtualized": "^9.20.0",
     "redux": "^4.0.0",
     "redux-form": "^7.4.2",
     "redux-logger": "^3.0.6",
@@ -33,6 +37,8 @@
     }
   },
   "devDependencies": {
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
     "husky": "^1.0.0-rc.6",
     "jest-cli": "^20.0.4",
     "lint-staged": "^7.1.0",
