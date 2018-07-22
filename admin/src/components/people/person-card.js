@@ -14,11 +14,12 @@ class PersonCard extends Component {
       opacity: isDragging ? 0.3 : 1
     }
     return (
-      <div style={dndStyle}>
-        {connectDragSource(<h3>{person.email}</h3>)}
-        <h4>{person.firstName}</h4>
-        <h4>{person.lastName}</h4>
-      </div>
+      <span style={dndStyle}>
+        {connectDragSource(<span>{person.email}</span>)}
+        <span>
+          {person.firstName} {person.lastName}
+        </span>
+      </span>
     )
   }
 }
