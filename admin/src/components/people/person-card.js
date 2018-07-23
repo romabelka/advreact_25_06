@@ -9,12 +9,12 @@ class PersonCard extends Component {
   }
 
   render() {
-    const { person, connectDragSource, isDragging } = this.props
+    const { person, connectDragSource, isDragging, style } = this.props
     const dndStyle = {
-      opacity: isDragging ? 0.3 : 1
+      backgroundColor: isDragging ? 'grey' : 'white'
     }
     return (
-      <div style={dndStyle}>
+      <div style={{ ...dndStyle, ...style }}>
         {connectDragSource(<h3>{person.email}</h3>)}
         <h4>{person.firstName}</h4>
         <h4>{person.lastName}</h4>
