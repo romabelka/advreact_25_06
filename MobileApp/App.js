@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Image } from 'react-native';
 import HelloWorld from './src/components/hello-world'
 import SignIn from './src/components/sign-in'
 import Event from './src/components/event'
@@ -12,6 +12,9 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+          <Image style = {styles.image}
+                 source = {require('./assets/logo.png')}
+                 resizeMode = {Image.resizeMode.contain}/>
           <EventList events = {events}/>
       </View>
     );
@@ -25,4 +28,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  image: {
+    width: '100%'
+  }
 });
