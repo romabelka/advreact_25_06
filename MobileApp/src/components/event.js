@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, Text, StyleSheet} from 'react-native'
+import {View, Text, Image, StyleSheet} from 'react-native'
 
 class Event extends Component {
     static propTypes = {
@@ -10,6 +10,7 @@ class Event extends Component {
         const { event } = this.props
         return (
             <View style = {styles.container}>
+                <Image source = {{uri: 'http://lorempixel.com/400/200'}} style = {styles.image}/>
                 <Text style = {styles.title}>{event.title}</Text>
                 <Text>{event.url}</Text>
                 <Text>{event.where}</Text>
@@ -20,6 +21,10 @@ class Event extends Component {
 }
 
 const styles = StyleSheet.create({
+    image: {
+        width: 400,
+        height: 200
+    },
     title: {
         fontSize: 30
     },
