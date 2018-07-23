@@ -10,12 +10,12 @@ import store from './redux'
 import './mocks'
 
 ReactDOM.render(
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <DragDropContextProvider backend={HTML5Backend}>
+  <DragDropContextProvider backend={HTML5Backend}>
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
         <App />
-      </DragDropContextProvider>
-    </ConnectedRouter>
-  </Provider>,
+      </ConnectedRouter>
+    </Provider>
+  </DragDropContextProvider>,
   document.getElementById('root')
 )
