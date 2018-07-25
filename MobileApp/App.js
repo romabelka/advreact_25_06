@@ -32,7 +32,7 @@ export default class App extends React.Component {
           <Image style = {styles.image}
                  source = {require('./assets/logo.png')}
                  resizeMode = {Image.resizeMode.contain}/>
-          <EventList events = {sectionsEvents}/>
+          <Event event = {events[0]}/>
       </View>
     );
   }
