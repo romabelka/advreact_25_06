@@ -12,10 +12,11 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-          <Image style = {styles.image}
-                 source = {require('./assets/logo.png')}
-                 resizeMode = {Image.resizeMode.contain}/>
-          <Event event = {events[0]}/>
+          {/*<Image style = {styles.image}*/}
+                 {/*source = {require('./assets/logo.png')}*/}
+                 {/*resizeMode = {Image.resizeMode.contain}/>*/}
+          {/*<Event event = {events[0]}/>*/}
+          <Event event={events[0]}/>
       </View>
     );
   }

@@ -1,17 +1,34 @@
-import React, { Component } from 'react'
-import {View, Text, Image, StyleSheet} from 'react-native'
+import React, {Component} from 'react'
+import {View, Text, Image, StyleSheet, Button, Alert} from 'react-native'
 
 class Event extends Component {
-    static propTypes = {
+    static propTypes = {};
 
-    };
+    deleteHandler = () => {
+        console.log('deleting event')
+    }
+
+    showAlertDeleting = () => Alert.alert(
+        'Deleting event',
+        'Are you sure?',
+        [
+            {text: 'Cancel', onPress: () => console.log('cancel deleting event')},
+            {text: 'OK', onPress: this.deleteHandler},
+        ],
+        {cancelable: false}
+    )
 
     render() {
-        const { event } = this.props
+        const {event} = this.props
         return (
-            <View style = {styles.container}>
-                <Image source = {{uri: 'http://lorempixel.com/400/200'}} style = {styles.image}/>
-                <Text style = {styles.title}>{event.title}</Text>
+            <View style={styles.container}>
+                <Image source={{uri: 'http://lorempixel.com/400/200'}} style={styles.image}/>
+                <Button
+                    color="red"
+                    title="Delete"
+                    onPress={this.showAlertDeleting}
+                />
+                <Text style={styles.title}>{event.title}</Text>
                 <Text>{event.url}</Text>
                 <Text>{event.where}</Text>
                 <Text>{event.when}</Text>
@@ -22,7 +39,7 @@ class Event extends Component {
 
 const styles = StyleSheet.create({
     image: {
-        width: 400,
+        width: '100%',
         height: 200
     },
     title: {
