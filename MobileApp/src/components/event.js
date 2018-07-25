@@ -1,10 +1,26 @@
 import React, { Component } from 'react'
-import {View, Text, Image, StyleSheet} from 'react-native'
+import {View, Text, Image, StyleSheet, Button, Modal} from 'react-native'
 
 class Event extends Component {
     static propTypes = {
 
     };
+
+    state = {
+      modalVisible: false,
+    };
+
+    showConfirm = () => {
+      this.setState({
+        modalVisible: true
+      })
+    }
+
+    hideConfirm = () => {
+      this.setState({
+        modalVisible: false
+      })
+    }
 
     render() {
         const { event } = this.props
@@ -17,6 +33,35 @@ class Event extends Component {
                   <Text>{event.where}</Text>
                   <Text>{event.when}</Text>
                 </View>
+                <Modal
+                  animationType="slide"
+                  transparent={false}
+                  visible={this.state.modalVisible}
+                  onRequestClose={() => {
+                    alert('Modal has been closed.');
+                  }}>
+                  <View style={{marginTop: 200}}>
+                    <View>
+                      <Text>Удалить?</Text>
+                      <Button
+                        onPress={this.hideConfirm}
+                        title="Ok"
+                        color="red"
+                      />
+                      <Button
+                        onPress={this.hideConfirm}
+                        title="Cancel"
+                        color="grey"
+                      />
+                    </View>
+                  </View>
+                </Modal>
+                <Button
+                  onPress={this.showConfirm}
+                  title="Удалить"
+                  color="#fbc"
+                  accessibilityLabel="Удалить событие"
+                />
             </View>
         )
     }
