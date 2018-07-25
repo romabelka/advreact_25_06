@@ -1,10 +1,22 @@
 import React, { Component } from 'react'
-import {View, Text, Image, StyleSheet} from 'react-native'
+import {View, Text, Image, StyleSheet, TouchableHighlight, Alert} from 'react-native'
 
 class Event extends Component {
     static propTypes = {
 
     };
+    
+    onPress = () => {
+        Alert.alert(
+            'Warning!',
+            'Are you sure you want to delete an event?',
+            [
+                {text: 'Yes'},
+                {text: 'No'}
+            ],
+            { cancelable: false }
+        )
+    }
 
     render() {
         const { event } = this.props
@@ -17,6 +29,12 @@ class Event extends Component {
                     <Text>{event.where}</Text>
                     <Text>{event.when}</Text>
                 </View>
+                <TouchableHighlight
+                    style={styles.button}
+                    onPress={this.onPress}
+                >
+                    <Text>Delete an event</Text>
+                </TouchableHighlight>
             </View>
         )
     }
@@ -37,6 +55,11 @@ const styles = StyleSheet.create({
     },
     desc: {
         padding: 15
+    },
+    button: {
+        alignItems: 'center',
+        backgroundColor: '#DDDDDD',
+        padding: 10
     }
 })
 
