@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {View, StyleSheet} from 'react-native'
+import {View, StyleSheet, Platform} from 'react-native'
 
 class Card extends Component {
     static propTypes = {
@@ -20,11 +20,18 @@ const styles = StyleSheet.create({
         padding: 5,
         margin: 10,
         backgroundColor: '#ddd',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 3, height: 3
-        },
-        shadowOpacity: 0.7
+        ...Platform.select({
+          ios: {
+            shadowColor: '#000',
+            shadowOffset: {
+                width: 3, height: 3
+            },
+            shadowOpacity: 0.7
+          },
+          android: {
+            elevation: 4
+          }
+        })
     }
 })
 
