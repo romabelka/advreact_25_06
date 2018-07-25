@@ -10,6 +10,23 @@ const events = Object.entries(data.events).map(([uid, event]) => ({...event, uid
 
 export default class App extends React.Component {
   render() {
+    const groupedEvents = events.reduce((acc, cur) => {
+      const firstLetter = cur.title[0].toUpperCase();
+      if (!acc[firstLetter]) {
+        acc[firstLetter] = []
+      }
+      acc[firstLetter].push(cur);
+      return acc;
+    }, {})
+
+    const sectionsEvents = Object.keys(groupedEvents).map((letter) => {
+      const events = groupedEvents[letter];
+      return {
+        title: `${letter} (${events.length})`,
+        data: events
+      }
+    })
+
     return (
       <View style={styles.container}>
           <Image style = {styles.image}

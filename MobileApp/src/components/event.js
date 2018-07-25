@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {View, Text, Image, StyleSheet} from 'react-native'
+import DeleteButton from './common/delete-button'
 
 class Event extends Component {
     static propTypes = {
@@ -15,6 +16,7 @@ class Event extends Component {
                 <Text>{event.url}</Text>
                 <Text>{event.where}</Text>
                 <Text>{event.when}</Text>
+                <DeleteButton />
             </View>
         )
     }
@@ -22,11 +24,12 @@ class Event extends Component {
 
 const styles = StyleSheet.create({
     image: {
-        width: 400,
+        width: 300,
         height: 200
     },
     title: {
-        fontSize: 30
+        fontSize: 30,
+        color: '#ffcb38'
     },
     container: {
         flex: 1,
