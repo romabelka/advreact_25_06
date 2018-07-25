@@ -18,7 +18,7 @@ export default class App extends React.Component {
           <Image style = {styles.image}
                  source = {require('./assets/logo.png')}
                  resizeMode = {Image.resizeMode.contain}/>
-          <EventList events={sectionListEvents}/>
+          <Event event={events[0]}/>
       </View>
     );
   }
@@ -48,9 +48,7 @@ function adjustSectionListData(eventsMap) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#fff'
   },
   image: {
     width: '100%'

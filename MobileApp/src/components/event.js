@@ -11,10 +11,12 @@ class Event extends Component {
         return (
             <View style = {styles.container}>
                 <Image source = {{uri: 'http://lorempixel.com/400/200'}} style = {styles.image}/>
-                <Text style = {styles.title}>{event.title}</Text>
-                <Text>{event.url}</Text>
-                <Text>{event.where}</Text>
-                <Text>{event.when}</Text>
+                <View style = {styles.desc}>
+                    <Text style = {styles.title}>{event.title}</Text>
+                    <Text>{event.url}</Text>
+                    <Text>{event.where}</Text>
+                    <Text>{event.when}</Text>
+                </View>
             </View>
         )
     }
@@ -22,15 +24,19 @@ class Event extends Component {
 
 const styles = StyleSheet.create({
     image: {
-        width: 400,
+        width: '100%',
         height: 200
     },
     title: {
         fontSize: 30
     },
     container: {
-        flex: 1,
-        justifyContent: 'space-around',
+        borderColor: 'black',
+        borderWidth: 1,
+        borderStyle: 'solid'
+    },
+    desc: {
+        padding: 15
     }
 })
 
