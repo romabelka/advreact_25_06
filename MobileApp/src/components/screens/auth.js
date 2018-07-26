@@ -13,12 +13,8 @@ class AuthScreen extends Component {
 
     render() {
         return (
-            <SignIn onSubmit = {this.handleSubmit}/>
+            <SignIn />
         )
-    }
-
-    handleSubmit = () => {
-        this.props.navigation.navigate('eventList')
     }
 }
 

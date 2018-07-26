@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import {View, TextInput, Text, Button, Platform} from 'react-native'
-import {observer} from 'mobx-react'
+import {observer, inject} from 'mobx-react'
 import stores from '../stores'
 
+@inject('navigation')
 @observer
 class SignIn extends Component {
     static propTypes = {
@@ -40,7 +41,7 @@ class SignIn extends Component {
     }
 
     handleSubmit = () => {
-        this.props.onSubmit()
+        this.props.navigation.goTo('eventList')
     }
 
     handleEmailChange = stores.auth.setEmail
