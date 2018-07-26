@@ -16,13 +16,15 @@ class EventList extends Component {
         }))
         return <SectionList
             sections = {sections}
-            renderSectionHeader = {({section}) => <Text style={styles.header}>{section.title}</Text>}
+            renderSectionHeader = {this.getSectionRenderer}
             renderItem = {({item}) => <TouchableOpacity onPress = {this.handleEventPress(item.event)}>
                 <EventCard event = {item.event} />
             </TouchableOpacity>
             }
         />
     }
+
+    getSectionRenderer = ({section}) => <Text style={styles.header}>{section.title}</Text>
 
     handleEventPress = (event) => () => this.props.onEventPress(event)
 }

@@ -1,25 +1,23 @@
 import React, { Component } from 'react'
 import {View, TextInput, Text, Button, Platform} from 'react-native'
+import {observer} from 'mobx-react'
+import stores from '../stores'
 
-
+@observer
 class SignIn extends Component {
     static propTypes = {
 
     };
 
-    state = {
-        email: '',
-        password: ''
-    }
-
     render() {
+        console.log('---', stores.auth)
         return (
             <View>
                 <Text>
                     Email:
                 </Text>
                 <TextInput
-                    value = {this.state.email}
+                    value = {stores.auth.email}
                     onChangeText = {this.handleEmailChange}
                     keyboardType = 'email-address'
                     style = {styles.input}
@@ -28,7 +26,7 @@ class SignIn extends Component {
                     Password:
                 </Text>
                 <TextInput
-                    value = {this.state.password}
+                    value = {stores.auth.password}
                     onChangeText = {this.handlePasswordChange}
                     style = {styles.input}
                     secureTextEntry
@@ -41,10 +39,12 @@ class SignIn extends Component {
         )
     }
 
-    handleSubmit = () => this.props.onSubmit()
+    handleSubmit = () => {
+        this.props.onSubmit()
+    }
 
-    handleEmailChange = (email) => this.setState({ email })
-    handlePasswordChange = (password) => this.setState({ password })
+    handleEmailChange = stores.auth.setEmail
+    handlePasswordChange = stores.auth.setPassword
 }
 
 const styles = {
