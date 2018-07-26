@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import {View, TextInput, Text, Button, Platform} from 'react-native'
 import {observer, inject} from 'mobx-react'
-import stores from '../stores'
 
-@inject('navigation')
+@inject('navigation', 'auth')
 @observer
 class SignIn extends Component {
     static propTypes = {
@@ -11,23 +10,26 @@ class SignIn extends Component {
     };
 
     render() {
-        console.log('---', stores.auth)
+        const { email, password, isValidEmail } = this.props.auth
         return (
             <View>
                 <Text>
                     Email:
                 </Text>
                 <TextInput
-                    value = {stores.auth.email}
+                    value = {email}
                     onChangeText = {this.handleEmailChange}
                     keyboardType = 'email-address'
                     style = {styles.input}
                 />
                 <Text>
+                    {isValidEmail ? '' : 'Not a valid email'}
+                </Text>
+                <Text>
                     Password:
                 </Text>
                 <TextInput
-                    value = {stores.auth.password}
+                    value = {password}
                     onChangeText = {this.handlePasswordChange}
                     style = {styles.input}
                     secureTextEntry
@@ -44,8 +46,8 @@ class SignIn extends Component {
         this.props.navigation.goTo('eventList')
     }
 
-    handleEmailChange = stores.auth.setEmail
-    handlePasswordChange = stores.auth.setPassword
+    handleEmailChange = (email) => this.props.auth.setEmail(email)
+    handlePasswordChange = (password) => this.props.auth.setPassword(password)
 }
 
 const styles = {
