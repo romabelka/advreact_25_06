@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Text, StyleSheet, SectionList} from 'react-native'
+import {Text, StyleSheet, SectionList, TouchableOpacity} from 'react-native'
 import EventCard from './event-card'
 import groupBy from 'lodash/groupBy'
 
@@ -17,9 +17,14 @@ class EventList extends Component {
         return <SectionList
             sections = {sections}
             renderSectionHeader = {({section}) => <Text style={styles.header}>{section.title}</Text>}
-            renderItem = {({item}) => <EventCard event = {item.event} />}
+            renderItem = {({item}) => <TouchableOpacity onPress = {this.handleEventPress(item.event)}>
+                <EventCard event = {item.event} />
+            </TouchableOpacity>
+            }
         />
     }
+
+    handleEventPress = (event) => () => this.props.onEventPress(event)
 }
 
 const styles = StyleSheet.create({
