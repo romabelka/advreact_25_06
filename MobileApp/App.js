@@ -17,5 +17,5 @@ export default class App extends React.Component {
     )
   }
 
-    setNavRef = stores.navigation.setNavRef
+    setNavRef = stores.customNavigation.setNavRef
 }

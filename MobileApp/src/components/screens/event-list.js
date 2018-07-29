@@ -1,9 +1,6 @@
 import React, { Component } from 'react'
 import {StyleSheet} from 'react-native'
 import EventList from '../events/event-list'
-import data from '../../fixtures'
-
-const events = Object.entries(data.events).map(([uid, event]) => ({...event, uid}))
 
 class EventListScreen extends Component {
     static propTypes = {
@@ -11,7 +8,7 @@ class EventListScreen extends Component {
     };
 
     render() {
-        return <EventList events = {events} onEventPress = {this.handleEventPress}/>
+        return <EventList onEventPress = {this.handleEventPress}/>
     }
 
     handleEventPress = ({ uid, title }) => {

@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {View, TextInput, Text, Button, Platform} from 'react-native'
 import {observer, inject} from 'mobx-react'
 
-@inject('navigation', 'auth')
+@inject('customNavigation', 'auth')
 @observer
 class SignIn extends Component {
     static propTypes = {
@@ -43,7 +43,11 @@ class SignIn extends Component {
     }
 
     handleSubmit = () => {
-        this.props.navigation.goTo('eventList')
+        const { email, password, signIn } = this.props.auth
+        const { goTo } = this.props.customNavigation
+
+        signIn(email, password)
+        goTo('eventList')
     }
 
     handleEmailChange = (email) => this.props.auth.setEmail(email)

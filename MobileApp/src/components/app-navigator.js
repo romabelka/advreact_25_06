@@ -1,12 +1,11 @@
-import {createStackNavigator} from 'react-navigation'
+import {createStackNavigator, createSwitchNavigator, createBottomTabNavigator} from 'react-navigation'
 import AuthScreen from './screens/auth'
+import SplashScreen from './screens/splash'
 import EventListScreen from './screens/event-list'
 import EventScreen from './screens/event'
+import PeopleScreen from './screens/people-list'
 
-export default createStackNavigator({
-    auth: {
-        screen: AuthScreen
-    },
+const EventStack = createStackNavigator({
     eventList: {
         screen: EventListScreen,
         navigationOptions: {
@@ -17,3 +16,34 @@ export default createStackNavigator({
         screen: EventScreen
     }
 })
+
+const PeopleStack = createStackNavigator({
+    peopleList: {
+        screen: PeopleScreen,
+        createStackNavigator: {
+            title: 'people'
+        }
+    }
+})
+
+const AppStack = createBottomTabNavigator({
+    Events: EventStack,
+    People: PeopleStack
+})
+
+const AuthStack = createStackNavigator({
+    auth: {
+        screen: AuthScreen
+    }
+})
+
+export default createSwitchNavigator(
+  {
+    Splash: SplashScreen,
+    App: AppStack,
+    Auth: AuthStack
+  },
+  {
+    initialRouteName: 'Splash',
+  }
+)
