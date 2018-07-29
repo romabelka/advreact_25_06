@@ -1,9 +1,11 @@
-import firebase from 'firebase/app'
+import { initializeApp } from 'firebase/app'
 import 'firebase/auth'
+import 'firebase/database'
 
-const appName = 'advreact-25-06-c6bae'
+export const appName = 'advreact-25-06-c6bae'
+
 const config = {
-  apiKey: "AIzaSyBM5eZETRfWWS9BoQ-8guawlYzeW7dDToE",
+  apiKey: 'AIzaSyBM5eZETRfWWS9BoQ-8guawlYzeW7dDToE',
   authDomain: `${appName}.firebaseapp.com`,
   databaseURL: `https://${appName}.firebaseio.com`,
   projectId: appName,
@@ -11,12 +13,4 @@ const config = {
   messagingSenderId: '985221034928'
 }
 
-if (!firebase.apps.length) {
-  firebase.initializeApp(config)
-}
-
-const auth = firebase.auth()
-
-export {
-  auth,
-}
+initializeApp(config)

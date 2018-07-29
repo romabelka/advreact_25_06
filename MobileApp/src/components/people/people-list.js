@@ -1,18 +1,14 @@
 import React, { Component } from 'react'
 import {View, Text, StyleSheet, SectionList, TouchableOpacity} from 'react-native'
-import EventCard from './event-card'
 import groupBy from 'lodash/groupBy'
+import PersonCard from './person-card'
 import {observer, inject} from 'mobx-react'
 
-@inject('events')
+@inject('people')
 @observer
-class EventList extends Component {
-    static propTypes = {
-
-    };
-
+class PeopleList extends Component {
     componentDidMount = () => {
-      this.props.events.getEvents()
+        this.props.people.getPeople()
     }
 
     renderLoading = () => (
@@ -26,36 +22,37 @@ class EventList extends Component {
     renderEmpty = () => (
         <View>
             <Text>
-                There are no events
+                There are no people
             </Text>
         </View>
     )
     
     render() {
-        const { loading, list: events, error } = this.props.events
+        const { loading, list: people, error } = this.props.people
+        console.log('----- rendering peopleList', people)
 
         if (loading) return this.renderLoading()
+        if (!people) return this.renderEmpty()
         
-        console.log('events before grouping', events)
-        const grouped = groupBy(events, event => event.title.charAt(0))
+        const grouped = groupBy(people, person => person.firstName.charAt(0))
         const sections = Object.entries(grouped).map(([letter, list]) => ({
-            title: `${letter}, ${list.length} events`,
-            data: list.map(event => ({key: event.uid, event}))
-        }))
+                title: `${letter}, ${list.length} people`,
+                data: list.map(person => ({key: person.uid, person}))
+            })
+        )
 
         return <SectionList
             sections = {sections}
             renderSectionHeader = {this.getSectionRenderer}
-            renderItem = {({item}) => <TouchableOpacity onPress = {this.handleEventPress(item.event)}>
-                <EventCard event = {item.event} />
-            </TouchableOpacity>
-            }
+            renderItem = {({item}) => (
+                <View>
+                    <PersonCard person = {item.person} />
+                </View>
+            )}
         />
     }
 
     getSectionRenderer = ({section}) => <Text style={styles.header}>{section.title}</Text>
-
-    handleEventPress = (event) => () => this.props.onEventPress(event)
 }
 
 const styles = StyleSheet.create({
@@ -72,4 +69,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default EventList
+export default PeopleList
