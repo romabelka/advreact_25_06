@@ -19,20 +19,10 @@ class PeopleList extends Component {
         </View>
     )
     
-    renderEmpty = () => (
-        <View>
-            <Text>
-                There are no people
-            </Text>
-        </View>
-    )
-    
     render() {
         const { loading, list: people, error } = this.props.people
-        console.log('----- rendering peopleList', people)
 
         if (loading) return this.renderLoading()
-        if (!people) return this.renderEmpty()
         
         const grouped = groupBy(people, person => person.firstName.charAt(0))
         const sections = Object.entries(grouped).map(([letter, list]) => ({

@@ -23,20 +23,11 @@ class EventList extends Component {
         </View>
     )
     
-    renderEmpty = () => (
-        <View>
-            <Text>
-                There are no events
-            </Text>
-        </View>
-    )
-    
     render() {
         const { loading, list: events, error } = this.props.events
 
         if (loading) return this.renderLoading()
         
-        console.log('events before grouping', events)
         const grouped = groupBy(events, event => event.title.charAt(0))
         const sections = Object.entries(grouped).map(([letter, list]) => ({
             title: `${letter}, ${list.length} events`,

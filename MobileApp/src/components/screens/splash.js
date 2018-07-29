@@ -14,7 +14,7 @@ class SplashScreen extends Component {
             const { goTo } = this.props.customNavigation
             
             this.props.auth.setUser = user
-            user ? goTo('peopleList') : goTo('auth')
+            user ? goTo('eventList') : goTo('auth')
         }))
     }
     
