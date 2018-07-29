@@ -1,17 +1,27 @@
 import React, { Component } from 'react'
-import {StyleSheet} from 'react-native'
+import {StyleSheet, Text} from 'react-native'
+import {observer, inject} from 'mobx-react'
 import EventList from '../events/event-list'
 import data from '../../fixtures'
+import loadEvents from '../../actions/events'
 
-const events = Object.entries(data.events).map(([uid, event]) => ({...event, uid}))
-
+@inject('events')
+@observer
 class EventListScreen extends Component {
     static propTypes = {
 
     };
 
+    componentDidMount() {
+      loadEvents()
+    }
+
     render() {
-        return <EventList events = {events} onEventPress = {this.handleEventPress}/>
+        const {data, loading} = this.props.events
+        if(loading) {
+          return <Text>Loading...</Text>
+        }
+        return <EventList events = {data} onEventPress = {this.handleEventPress}/>
     }
 
     handleEventPress = ({ uid, title }) => {
