@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
+import {observer} from 'mobx-react'
 import {View, Text, Image, StyleSheet, Button} from 'react-native'
 import ConfirmModal from '../common/confirm-modal'
 
+@observer
 class Event extends Component {
     static propTypes = {
 

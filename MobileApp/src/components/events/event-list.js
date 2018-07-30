@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
+import {action} from 'mobx'
+import {observer, Observer} from 'mobx-react'
 import {Text, StyleSheet, SectionList, TouchableOpacity} from 'react-native'
 import EventCard from './event-card'
 import groupBy from 'lodash/groupBy'
 
+@observer
 class EventList extends Component {
     static propTypes = {
 
@@ -17,12 +20,19 @@ class EventList extends Component {
         return <SectionList
             sections = {sections}
             renderSectionHeader = {this.getSectionRenderer}
-            renderItem = {({item}) => <TouchableOpacity onPress = {this.handleEventPress(item.event)}>
+            renderItem = {({item}) => <TouchableOpacity
+                onPress = {this.handleEventPress(item.event)}
+                onLongPress = {this.handleLongPress(item.event)}
+            >
                 <EventCard event = {item.event} />
             </TouchableOpacity>
             }
         />
     }
+
+    handleLongPress = (event) => action(() => {
+        event.title = 'zzzzzz'
+    })
 
     getSectionRenderer = ({section}) => <Text style={styles.header}>{section.title}</Text>
 
