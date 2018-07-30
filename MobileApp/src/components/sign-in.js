@@ -42,9 +42,7 @@ class SignIn extends Component {
         )
     }
 
-    handleSubmit = () => {
-        this.props.navigation.goTo('eventList')
-    }
+    handleSubmit = this.props.auth.signIn
 
     handleEmailChange = (email) => this.props.auth.setEmail(email)
     handlePasswordChange = (password) => this.props.auth.setPassword(password)
