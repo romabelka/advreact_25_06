@@ -7,15 +7,18 @@ class AuthStore extends BasicStore {
     @observable password = ''
     @observable user = null
 
+    constructor(...args) {
+        super(...args)
+        firebase.auth().onAuthStateChanged(this.setUser)
+    }
+
+    @action setUser = (user) => this.user = user
+
     @action setEmail = email => this.email = email
     @action setPassword = password => this.password = password
 
     signIn = () => {
         firebase.auth().signInWithEmailAndPassword(this.email, this.password)
-            .then(action(user => {
-                this.user = user
-                this.getStore('navigation').goTo('lists')
-            }))
     }
 
 

@@ -6,8 +6,8 @@ import EventsStore from './events'
 
 const stores = {}
 
-stores.navigation = new NavigationStore(stores)
 stores.auth = new AuthStore(stores)
+stores.navigation = new NavigationStore(stores)
 stores.people = new PeopleStore(stores)
 stores.events = new EventsStore(stores)
 
