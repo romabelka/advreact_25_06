@@ -16,17 +16,19 @@ class PeopleList extends Component {
     }
 
     render() {
-        const {onPersonPress, people} = this.props
+        const {people} = this.props
         if (people.loading) return <ActivityIndicator size='large'/>
 
         return <SectionList
             sections = {people.sections}
             renderSectionHeader = {({section}) => <Text style={styles.header}>{section.title}</Text>}
-            renderItem = {({item}) => <TouchableOpacity onPress = {onPersonPress.bind(null, item.key)}>
+            renderItem = {({item}) => <TouchableOpacity onPress = {this.handlePersonPress(item.person)}>
                 <PersonCard person = {item.person} />
             </TouchableOpacity>}
         />
     }
+
+    handlePersonPress = (person) => () => this.props.onPersonPress(person)
 }
 
 const styles = StyleSheet.create({
