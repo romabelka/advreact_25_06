@@ -8,10 +8,11 @@ class PersonCard extends Component {
     };
 
     render() {
-        const { email, firstName, lastName } = this.props.person
+        const { email, firstName, lastName, image } = this.props.person
+        const uri = image ? image : 'https://www.aramsco.com//ASSETS/IMAGES/ITEMS/DETAIL_PAGE/NoImage.png';
         return (
             <Card style = {styles.container}>
-                <Image source={{uri: 'http://lorempixel.com/200/100/people/'}} style = {styles.avatar}/>
+                <Image source={{uri}} style = {styles.avatar}/>
                 <View style = {styles.content}>
                     <Text style = {styles.email}>{email}</Text>
                     <Text>{firstName} {lastName}</Text>
@@ -27,8 +28,9 @@ const styles = StyleSheet.create({
     },
     avatar: {
         width: 200,
-        height: 100,
-        margin: 5
+        height: 200,
+        margin: 5,
+        alignSelf: 'center',
     },
     content: {
         flexDirection: 'column',

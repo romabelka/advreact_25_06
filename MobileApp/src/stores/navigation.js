@@ -33,6 +33,8 @@ class NavigationStore extends BasicStore {
         routeName
     }))
 
+    back = () => this.ref.dispatch(NavigationActions.back())
+
     reset = routeName => this.ref.dispatch(StackActions.reset({
         index: 0,
         actions: [

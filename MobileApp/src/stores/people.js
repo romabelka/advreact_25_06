@@ -13,6 +13,8 @@ class PeopleStore extends EntitiesStore {
     }
 
     @action loadAll = loadAllHelper('people')
+
+    @action updateImage = (key, data) => this.entities[key] = data
 }
 
 export default PeopleStore

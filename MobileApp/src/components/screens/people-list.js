@@ -3,7 +3,7 @@ import {observer, inject} from 'mobx-react'
 import {View, StyleSheet, ActivityIndicator} from 'react-native'
 import PeopleList from '../people/people-list'
 
-@inject('people') @observer
+@inject('people', 'navigation') @observer
 class PeopleListScreen extends Component {
     static propTypes = {
 
@@ -21,11 +21,15 @@ class PeopleListScreen extends Component {
     render() {
         const {people} = this.props
         if (people.loading) return this.getLoader()
-        return <PeopleList />
+        return <PeopleList onPersonPress={this.handlePersonPress}/>
     }
 
     getLoader() {
         return <View><ActivityIndicator size='large'/></View>
+    }
+
+    handlePersonPress = ({uid}) => {
+      this.props.navigation.navigate('photo', { uid, type: 'people' })
     }
 }
 
