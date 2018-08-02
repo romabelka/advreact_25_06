@@ -13,19 +13,17 @@ class NavigationStore extends BasicStore {
     onReady = () => {
         let firstRun = true
 
-        setTimeout(() => {
-            autorun(() => {
-                const authenticated = !!this.getStore('auth').user
+        autorun(() => {
+            const authenticated = !!this.getStore('auth').user
 
-                if (!firstRun) {
-                    authenticated
-                        ? this.reset('lists')
-                        : this.reset('auth')
-                }
+            if (!firstRun) {
+                authenticated
+                    ? this.reset('lists')
+                    : this.reset('auth')
+            }
 
-                firstRun = false
-            })
-        }, 0 )
+            firstRun = false
+        })
 
     }
 
