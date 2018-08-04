@@ -8,7 +8,7 @@ class AuthScreen extends Component {
 
     render() {
         return (
-            <Camera uid={this.props.navigation.state.params.uid} />
+            <Camera uid={this.props.navigation.state.params.uid} goBack={this.props.navigation.goBack} />
         )
     }
 }

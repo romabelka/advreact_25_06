@@ -26,7 +26,9 @@ export default class CameraExample extends React.Component {
   takePicture = async () => {
       if (this.camera) {
         let photo = await this.camera.takePictureAsync({base64: true})
-        this.props.people.updateAvatar(photo.base64, this.props.uid)
+        await this.props.people.updateAvatar(photo.base64, this.props.uid)
+
+        this.props.goBack()
       }
   }
 
