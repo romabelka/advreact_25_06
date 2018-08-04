@@ -27,9 +27,14 @@ class NavigationStore extends BasicStore {
 
     }
 
-    goTo = routeName => this.ref.dispatch(NavigationActions.navigate({
-        routeName
-    }))
+    goTo = (routeName, params) => {
+        this.ref.dispatch(NavigationActions.navigate({
+            routeName,
+            params: {
+                ...params
+            }
+        }))
+    }
 
     reset = routeName => this.ref.dispatch(StackActions.reset({
         index: 0,
