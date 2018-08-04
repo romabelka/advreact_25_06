@@ -1,15 +1,17 @@
-import React from 'react';
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Camera, Permissions, MediaLibrary } from 'expo';
+import React from 'react'
+import { Text, View, TouchableOpacity, StyleSheet } from 'react-native'
+import { Camera, Permissions } from 'expo'
+import {inject} from 'mobx-react'
 
+@inject('people')
 export default class CameraExample extends React.Component {
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
-  };
+  }
 
   async componentWillMount() {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    const { status } = await Permissions.askAsync(Permissions.CAMERA)
     this.setState({ hasCameraPermission: status === 'granted' })
   }
 
@@ -22,36 +24,23 @@ export default class CameraExample extends React.Component {
   }
 
   takePicture = async () => {
-    if (this.camera) {
-      let photo = await this.camera.takePictureAsync()
-      console.log('----- photo', photo)
-      this.saveToGallery(photo.uri)
-    }
+      if (this.camera) {
+        let photo = await this.camera.takePictureAsync({base64: true})
+        this.props.people.updateAvatar(photo.base64, this.props.uid)
+      }
   }
 
-  saveToGallery = async (photoURI) => {
-      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
-
-      if (status !== 'granted') {
-        throw new Error('Denied CAMERA_ROLL permissions!')
-      }
-
-      await MediaLibrary.createAssetAsync(photoURI)
-      
-      alert('Successfully saved photos to user\'s gallery!')
-  };
-
   render() {
-    const { hasCameraPermission } = this.state;
+    const { hasCameraPermission } = this.state
 
     if (hasCameraPermission === null) {
-      return <View />;
+      return <View />
     } else if (hasCameraPermission === false) {
-      return <Text>No access to camera</Text>;
+      return <Text>No access to camera</Text>
     } else {
       return (
         <View style={{ flex: 1 }}>
-          <Camera style={styles.camera} type={this.state.type} ref={ref => { this.camera = ref; }}>
+          <Camera style={styles.camera} type={this.state.type} ref={ref => { this.camera = ref }}>
             <View style={styles.textContainer}>
                 <TouchableOpacity style={styles.flip} onPress={this.flipCamera}>
                     <Text style={styles.flipText}>
@@ -62,7 +51,7 @@ export default class CameraExample extends React.Component {
             </View>
           </Camera>
         </View>
-      );
+      )
     }
   }
 }

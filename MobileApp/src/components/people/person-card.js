@@ -10,11 +10,11 @@ class PersonCard extends Component {
     };
 
     render() {
-        const { email, firstName, lastName } = this.props.person
+        const { email, firstName, lastName, uid, avatar } = this.props.person
         return (
-            <TouchableHighlight onLongPress={this.openCamera}>
+            <TouchableHighlight onLongPress={this.openCamera.bind(null, uid)}>
                 <Card style = {styles.container}>
-                    <Image source={{uri: 'http://lorempixel.com/200/100/people/'}} style = {styles.avatar}/>
+                    <Image source={{uri: avatar || 'http://lorempixel.com/200/100/people/'}} style = {styles.avatar}/>
                     <View style = {styles.content}>
                         <Text style = {styles.email}>{email}</Text>
                         <Text>{firstName} {lastName}</Text>
@@ -24,8 +24,8 @@ class PersonCard extends Component {
         )
     }
 
-    openCamera = () => {
-        this.props.navigation.goTo('camera')
+    openCamera = (uid) => {
+        this.props.navigation.goTo('camera', { uid })
     }
 }
 
