@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {inject, observer} from 'mobx-react'
 import {TouchableOpacity, Text, SectionList, ActivityIndicator, StyleSheet} from 'react-native'
 import PersonCard from './person-card'
+import { action } from 'mobx'
 
 @inject('people')
 @observer
@@ -22,9 +23,12 @@ class PeopleList extends Component {
         return <SectionList
             sections = {people.sections}
             renderSectionHeader = {({section}) => <Text style={styles.header}>{section.title}</Text>}
-            renderItem = {({item}) => <TouchableOpacity onPress = {onPersonPress.bind(null, item.key)}>
-                <PersonCard person = {item.person} />
-            </TouchableOpacity>}
+            renderItem = {({item}) => (
+                <TouchableOpacity
+                    onPress = {onPersonPress.bind(null, item.key)}>
+                        <PersonCard person = {item.person} />
+                </TouchableOpacity>
+            )}
         />
     }
 }

@@ -1,16 +1,17 @@
 import { initializeApp } from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/database'
+import 'firebase/storage'
 
-export const appName = 'adv-react-25-06'
+export const appName = 'advreact-25-06-c6bae'
 
 const config = {
-    apiKey: 'AIzaSyDzqwnZ_39QyqhxYZVPjVH8eBww7DUBmVc',
+    apiKey: "AIzaSyBM5eZETRfWWS9BoQ-8guawlYzeW7dDToE",
     authDomain: `${appName}.firebaseapp.com`,
     databaseURL: `https://${appName}.firebaseio.com`,
     projectId: appName,
-    storageBucket: '',
-    messagingSenderId: '874599443389'
+    storageBucket: `gs://${appName}.appspot.com`,
+    messagingSenderId: '985221034928'
 }
 
 initializeApp(config)
