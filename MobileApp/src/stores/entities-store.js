@@ -31,4 +31,20 @@ export function loadAllHelper(refName) {
     })
 }
 
+export function subscribeHelper(refName) {
+    return action(function () {
+        this.loading = true
+
+        const callback = action(data => {
+            this.entities = entitiesFromFB(data.val())
+            this.loading = false
+            this.loaded = true
+        })
+
+        firebase.database().ref(refName).on('value', callback)
+
+        return () => firebase.database().ref(refName).off('value', callback)
+    })
+}
+
 export default EntitiesStore

@@ -1,6 +1,7 @@
-import EntitiesStore, {loadAllHelper}  from './entities-store'
+import EntitiesStore, {subscribeHelper}  from './entities-store'
 import {computed, action} from 'mobx'
 import groupBy from 'lodash/groupBy'
+import firebase from 'firebase/app'
 
 class PeopleStore extends EntitiesStore {
     @computed get sections() {
@@ -12,7 +13,20 @@ class PeopleStore extends EntitiesStore {
         }))
     }
 
-    @action loadAll = loadAllHelper('people')
+    @action updatePerson(uid, data) {
+        firebase.database().ref(`people/${uid}`).update(data)
+    }
+
+    @action loadAll = subscribeHelper('people')
+
+    async takePhoto(uid, base64) {
+        const ref = firebase.storage().ref(`/avatars/${uid}.jpg`)
+
+        await ref.putString(base64, 'base64', {contentType:'image/jpeg'})
+        const avatar = await ref.getDownloadURL()
+
+        this.updatePerson(uid, {avatar})
+    }
 }
 
 export default PeopleStore
